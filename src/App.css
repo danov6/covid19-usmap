@@ -106,6 +106,10 @@ body {
 div.jvectormap-container > svg {
   height: 600px !important;
 }
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: #0a09094f;
+}
 /*
  * Footer
  */
