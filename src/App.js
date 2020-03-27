@@ -2,8 +2,8 @@ import React from 'react';
 import { VectorMap } from 'react-jvectormap';
 import './App.css';
 import LoadingSpinner from './LoadingSpinner';
-
-var moment = require('moment');
+import UnitedStatesTable from './UnitedStatesTable';
+import StateTable from './StateTable';
 
 class App extends React.Component {
 
@@ -18,13 +18,16 @@ class App extends React.Component {
     maxDeaths: {},
     minCases: {},
     minDeaths: {},
+    selectedState: {},
     isLoading: true,
   };
 
   componentDidMount(){
     this.fetchAllData();
   }
-
+  shouldComponentUpdate(nextProps,nextState){
+    return (nextState.selectedState === this.state.selectedState)
+  }
   refreshData = () => {
     this.setState({
       isLoading: true,
@@ -34,6 +37,11 @@ class App extends React.Component {
   }
 
   fetchAllData = () => {
+
+    if(document.cookie === ""){
+      localStorage.clear();
+    }
+
     if(localStorage.getItem('covid_data') != null && localStorage.getItem('covid_data_updated') != null  && localStorage.getItem('covid_data_recovered') != null){
       //check localStorage
       let us_data = JSON.parse(localStorage.getItem('covid_data'));
@@ -51,16 +59,21 @@ class App extends React.Component {
       });
     }else{
       //get from API
-      fetch('https://covid19-api.weedmark.systems/api/v1/stats')
+      fetch('https://covid19-api.weedmark.systems/api/v1/stats?country=US')
       .then(res => res.json())
       .then(data => {
-        const us_stats = data.data.covid19Stats.filter((s) => {
-          return (s.country === 'US');
-        });
+        const us_stats = data.data.covid19Stats;
 
         //set localStorage
         localStorage.setItem('covid_data', JSON.stringify(this.groupData(us_stats)));
         localStorage.setItem('covid_data_updated', data.data.lastChecked);
+
+        //set cookie to grab new data in one hour
+        var now = new Date();
+        var time = now.getTime();
+        time += 3600 * 1000;
+        now.setTime(time);
+        document.cookie = 'recent_data=1; expires=' + now.toUTCString() + '; path=/';
         
         this.setState({
           stateData: this.groupData(us_stats),
@@ -90,20 +103,30 @@ class App extends React.Component {
         }
       }else if(typeof grouped_data[s.province] === "undefined"){
         //add new state
+        let city = {
+          name: s.keyId,
+          cases: s.confirmed,
+          deaths: s.deaths
+        };
         grouped_data[s.province] = {
           province: s.province,
           confirmed: s.confirmed,
           deaths: s.deaths,
           recovered: s.recovered,
           lastUpdate: s.lastUpdate,
-          keyId: s.keyId
+          keyId: [city]
         };
       }else{
         //update existing state
+        let city = {
+          name: s.keyId,
+          cases: s.confirmed,
+          deaths: s.deaths
+        };
         grouped_data[s.province].confirmed += s.confirmed;
         grouped_data[s.province].deaths += s.deaths;
         grouped_data[s.province].recovered += s.recovered;
-        grouped_data[s.province].keyId +=  "|" + s.keyId;
+        grouped_data[s.province].keyId.push(city);
       }
     });
 
@@ -138,6 +161,20 @@ class App extends React.Component {
       us_cases,
       us_deaths
     });
+  }
+  setClickListener = (prov) => {
+    if(typeof stateAbbs[prov] !== "undefined" && document.querySelector("path[data-code="+ stateAbbs[prov] +"]") != null){
+      document.querySelector("path[data-code="+ stateAbbs[prov] +"]").addEventListener('click',(e)=>{
+        document.querySelector("path[data-code="+ stateAbbs[prov] +"]").style.fill = '#000';
+        let { stateData } = this.state;
+        let selectedState = stateData.filter((s)=>{
+          return (s.province === prov)
+        })[0];
+        this.setState({
+          selectedState
+        });
+      });
+    }
   }
 
   setMinAndMaxValues = (return_data) => {
@@ -189,52 +226,60 @@ class App extends React.Component {
       }
     }
 
-
-    //color states on map =======NEEDS TO BE UPDATED========
     setTimeout(() => {
       this.setState({
         isLoading: false
       });
       for(var i=0; i < return_data.length; i++){
         var percent = 100 - ((return_data[i].deaths / max_deaths['count']) * 100);
+
+        //color states on map
         colorProvince(percent, return_data[i].province);
+
+        //add listeners to states
+        this.setClickListener(return_data[i].province);
       }
     }, 1000)
   }
 
+  onRegionClick = (e,code) => {
+    let { stateData } = this.state;
+    console.log(code)
+    //document.querySelector("path[data-code="+ code +"]").style.fill = '#000';
+    var selectedState = stateData.filter((s) => {
+      return code === stateAbbs[s.province]
+    })[0];
+    this.setState({
+      selectedState
+    });
+  }
+
   render(){
-    const { hasError, stateData, isLoading, us_cases, us_deaths, us_recovered } = this.state;
+    const { hasError, stateData, isLoading, us_cases, us_deaths, us_recovered, selectedState, lastUpdated } = this.state;
     const regionControls = {
       initial: {
-        fill: '#175c98',
+        "fill": "#175c98",
         "borderColor": '#fff',
         "fill-opacity": 1,
-        stroke: 'none',
+        "stroke": "none",
         "stroke-width": 0,
         "stroke-opacity": 1
       },
       hover: {
         "fill-opacity": 0.8,
-        cursor: 'pointer'
+        "cursor": "pointer"
       },
       selected: {
-        fill: 'yellow',
+        "fill": "yellow",
         "fill-opacity": 1
       },
       selectedHover: {
       }
     };
 
-    const state_data = stateData.map((s,i) => {
-      return (
-        <tr key={i} data-state={stateAbbs[s.province]}>
-          <td>{s.province}</td>
-          <td>{s.confirmed}</td>
-          <td>{s.deaths}</td>
-          <td>{moment(new Date(s.lastUpdate)).startOf('hour').fromNow()}</td>
-        </tr>
-      )
-    })
+    if(document.querySelectorAll('.jvectormap-tip').length > 0){
+      document.querySelectorAll('.jvectormap-tip')[0].remove();
+    }
 
     return (
       <div className="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
@@ -250,11 +295,13 @@ class App extends React.Component {
         <main role="main" className="inner cover">
           {isLoading ? <LoadingSpinner /> :
             <div style={{width: '100%', height: 700}}>
-              <table style={{width: '100%', fontSize: '2em', marginTop: '8%'}}>
+              <table style={{width: '100%', fontSize: '2em', marginTop: '8%', backgroundColor: '#2d2d2d', borderRadius: 6}}>
                 <thead>
-                  <td>Cases</td>
-                  <td>Deaths</td>
-                  <td>Recoveries</td>
+                  <tr>
+                    <td>Cases</td>
+                    <td>Deaths</td>
+                    <td>Recoveries</td>
+                  </tr>
                 </thead>
                 <tbody>
                   <tr>
@@ -273,32 +320,19 @@ class App extends React.Component {
                       height: '100%',
                       padding: '5%'
                   }}
-                  regionsSelectable={true}
+                  regionsSelectable={false}
                   regionsSelectableOne={true}
                   regionStyle={regionControls}
                   containerClassName="map"
-                  //  onRegionClick={ clickedTeam }
                   //  selectedRegions= { selectedRegions }
                   //  selectedMarkers= { [] }
                     />
-              <div className="table-responsive">
-                <table style={{width: '100%', fontSize: '1.2em', color: '#fff'}} className="table table-striped table-sm">
-                  <thead>
-                    <tr>
-                      <th>State</th>
-                      <th>Total Cases</th>
-                      <th>Deaths</th>
-                      <th>Last Updated</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {state_data}
-                  </tbody>
-                </table>
-              </div>
+              {Object.keys(selectedState).length === 0 ?
+              <UnitedStatesTable stateData={stateData} /> :
+              <StateTable selectedState={selectedState} lastUpdated={lastUpdated}/>
+              }
             </div>
           }
-        
         </main>
         {/* <footer className="mastfoot mt-auto">
           <div className="inner">
@@ -366,7 +400,6 @@ const stateAbbs = {
 const colorProvince = (perc,prov) => {
   var r, g, b = 0;
   var color = '';
-  console.log(perc);
   if(perc < 50) {
     r = 255;
     g = Math.round(5.1 * perc);
