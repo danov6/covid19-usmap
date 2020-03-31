@@ -3,7 +3,7 @@ import { VectorMap } from "react-jvectormap";
 import "./App.css";
 import LoadingSpinner from "./LoadingSpinner";
 import UnitedStatesTable from "./UnitedStatesTable";
-import Cities from "./Cities";
+import CitiesTable from "./CitiesTable";
 import STATES from "./constants/States";
 import Statistics from "./components/Statistics";
 import Header from "./components/Header";
@@ -24,6 +24,7 @@ class App extends React.Component {
     us_cases: 0,
     us_deaths: 0,
     us_recovered: 0,
+    cityData: [],
     states: {},
     hasError: false,
     lastUpdated: null,
@@ -108,6 +109,7 @@ class App extends React.Component {
     localStorage.setItem("covid_data_updated", data.data.lastChecked);
 
     this.setState({
+      cityData: us_stats,
       stateData: this.aggregateData(us_stats),
       lastUpdated: data.data.lastChecked
     });
@@ -146,27 +148,27 @@ class App extends React.Component {
     this.setMinAndMaxValues(map.states);
   };
 
-  setClickListener = prov => {
-    if (
-      typeof STATES[prov] !== "undefined" &&
-      document.querySelector("path[data-code=" + STATES[prov] + "]") != null
-    ) {
-      document
-        .querySelector("path[data-code=" + STATES[prov] + "]")
-        .addEventListener("click", e => {
-          document.querySelector(
-            "path[data-code=" + STATES[prov] + "]"
-          ).style.fill = "#000";
-          let { stateData } = this.state;
-          let selectedState = stateData.filter(s => {
-            return s.province === prov;
-          })[0];
-          this.setState({
-            selectedState
-          });
-        });
-    }
-  };
+  // setClickListener = prov => {
+  //   if (
+  //     typeof STATES[prov] !== "undefined" &&
+  //     document.querySelector("path[data-code=" + STATES[prov] + "]") != null
+  //   ) {
+  //     document
+  //       .querySelector("path[data-code=" + STATES[prov] + "]")
+  //       .addEventListener("click", e => {
+  //         document.querySelector(
+  //           "path[data-code=" + STATES[prov] + "]"
+  //         ).style.fill = "#000";
+  //         let { stateData } = this.state;
+  //         let selectedState = stateData.filter(s => {
+  //           return s.province === prov;
+  //         })[0];
+  //         this.setState({
+  //           selectedState
+  //         });
+  //       });
+  //   }
+  // };
 
   setMinAndMaxValues = return_data => {
     //find max confirmed cases
@@ -234,17 +236,17 @@ class App extends React.Component {
     });
   };
 
-  onRegionClick = (e, code) => {
-    let { stateData } = this.state;
-    console.log(code);
-    //document.querySelector("path[data-code="+ code +"]").style.fill = '#000';
-    var selectedState = stateData.filter(s => {
-      return code === STATES[s.province];
-    })[0];
-    this.setState({
-      selectedState
-    });
-  };
+  // onRegionClick = (e, code) => {
+  //   let { stateData } = this.state;
+  //   console.log(code);
+  //   //document.querySelector("path[data-code="+ code +"]").style.fill = '#000';
+  //   var selectedState = stateData.filter(s => {
+  //     return code === STATES[s.province];
+  //   })[0];
+  //   this.setState({
+  //     selectedState
+  //   });
+  // };
 
   render() {
     const {
@@ -253,6 +255,7 @@ class App extends React.Component {
       us_cases,
       us_deaths,
       us_recovered,
+      cityData,
       selectedState,
       lastUpdated
     } = this.state;
@@ -293,7 +296,7 @@ class App extends React.Component {
                 deaths={us_deaths}
                 recovered={us_recovered}
               />
-              <Map/>
+              <Map cityData={cityData} states={states}/>
               <UnitedStatesTable states={states} us_cases={us_cases} us_deaths={us_deaths} />
               {/* {cities.length === 0 ?
                 <UnitedStatesTable states={states} /> :

@@ -1,7 +1,7 @@
 import React from "react";
 import moment from "moment"
 
-const Cities = ({ cities, lastUpdated }) => {
+const CitiesTable = ({ cities, lastUpdated }) => {
   const city_data = cities.cases.sort().map(city => {
     return (
       <tr key={city.name}>
@@ -39,4 +39,4 @@ const Cities = ({ cities, lastUpdated }) => {
   );
 };
 
-export default Cities;
+export default CitiesTable;

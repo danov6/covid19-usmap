@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import ReactMapGL, {Source, Layer} from 'react-map-gl';
+import ReactMapGL, {Source, Layer, Marker} from 'react-map-gl';
+import Cities from './../constants/Cities.json';
+import * as d3 from 'd3';
 
-const Map = () => {
+const Map = ({cityData, states}) => {
   const [ viewport, setViewport ] = useState({
     latitude: 38.219860,
     longitude: -96.500965,
@@ -11,48 +13,49 @@ const Map = () => {
     margin: '5% 0%',
     minZoom: 3
   });
-    return (
-      <div>
-      <ReactMapGL
-      {...viewport}
-      mapboxApiAccessToken='pk.eyJ1IjoiZ2x2YWxkZXoiLCJhIjoiY2s4ZGVsamIxMHRqazNsb3d1aDN6bmNvMCJ9.AzXsa9tQkXmdzyXaDUdqJw'
-      mapStyle="mapbox://styles/glvaldez/ck8df394y0hn51imqb0n3yu9v"
-      onViewportChange={viewport => {
-        setViewport(viewport)
-      }}>
-      </ReactMapGL>
-      </div>
 
-      //   <MapboxMap
-      //   style="mapbox://styles/glvaldez/ck8df394y0hn51imqb0n3yu9v"
-      //   containerStyle={{
-      //     height: '70vh',
-      //     borderRadius: 5,
-      //     margin: '5% 0%'
-      //   }}
-      //   center={[-96.500965, 38.219860]}
-      //   zoom={[3]}
-      // >
-      // <Source type="geojson" data={data}>
-      //   <Layer />
-      // </Source>
-      //       <Layer
-			// 	type="circle"
-			// 	id="participant-marker"
-			// 	paint={{
-			// 		'circle-stroke-width': 3,
-			// 		'circle-radius': 5,
-			// 		'circle-blur': 0.15,
-			// 		'circle-color': '#3770C6',
-			// 		'circle-stroke-color': 'white'
-			// 	}}
-			// >
-      //           <Feature
-			// 		coordinates={[-96.500965, 38.219860]}
-			// 		draggable
-			// 		// onDragEnd={evt => this.props.onDragEnd(evt, participant.guid)}
-			// 	/>
-			// </Layer>
+  let markers = [];
+  for(var i = 0; i < Cities.length; i++){
+    var state = Cities[i].state;
+    for(var j = 0; j < states[state].length; j++){
+      if(states[state][j].city === Cities[i].city &&
+         states[state][j].province === Cities[i].state &&
+         states[state][j].confirmed !== 0){
+        markers.push({
+          cases: states[state][j].confirmed,
+          deaths: states[state][j].deaths,
+          data: Cities[i]
+        });
+        break;
+      }
+    }
+  }
+  var markerColor = d3.scaleQuantize()
+    .domain([1, 1000])
+    .range(["yellow", "red"]);
+    return (
+      <div style={{margin: 10}}>
+        <ReactMapGL
+        {...viewport}
+        mapboxApiAccessToken='pk.eyJ1IjoiZ2x2YWxkZXoiLCJhIjoiY2s4ZGVsamIxMHRqazNsb3d1aDN6bmNvMCJ9.AzXsa9tQkXmdzyXaDUdqJw'
+        mapStyle="mapbox://styles/glvaldez/ck8df394y0hn51imqb0n3yu9v"
+        onViewportChange={viewport => {
+          setViewport(viewport)
+        }}
+        >
+          {/* <Marker latitude={40.7127837} longitude={-74.0059413}>
+            <p style={{color: 'red'}}>.</p>
+          </Marker> */}
+
+        {markers.map((c,i) => {
+          return (
+            <Marker latitude={c.data.latitude} longitude={c.data.longitude} key={i}>
+               <p style={{color: 'red', fontSize: 20, cursor: 'pointer'}}>.</p>
+            </Marker>
+          )
+        })}
+        </ReactMapGL>
+      </div>
     );
 }
 
