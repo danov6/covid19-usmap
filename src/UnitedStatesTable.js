@@ -12,7 +12,9 @@ const UnitedStatesTable = ({ states, lastChecked = new Date() }) => {
     });
 
     return { province: key, cases, deaths, lastUpdate: lastChecked };
-  });
+  }).sort((a, b) => (a.cases < b.cases) ? 1 : -1);
+
+  //stateData = stateData.sort((a, b) => (a.confirmed > b.confirmed) ? 1 : -1)
 
   return (
     <div className="table-responsive">

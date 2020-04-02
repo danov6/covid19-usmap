@@ -9,6 +9,9 @@ import Statistics from "./components/Statistics";
 import Header from "./components/Header";
 import ReactMapGL from 'react-map-gl';
 import Map from './components/Map';
+import SidePanel from './components/SidePanel';
+
+import USData from './constants/USData';
 
 // var mapboxgl = require('mapbox-gl/dist/mapbox-gl.js');
         
@@ -94,24 +97,27 @@ class App extends React.Component {
     //     lastUpdated: data.data.lastChecked
     //   });
     // }
+    //https://covidtracking.com/api/states
+    //https://covid19-server.chrismichael.now.sh/api/v1/CasesInAllUSStates
+    // const res = await fetch(
+    //   "http://covid19-api.weedmark.systems/api/v1/stats?country=US"
+    // );
+    // const data = await res.json();
+    // const us_stats = data.data.covid19Stats;
 
-    const res = await fetch(
-      "http://covid19-api.weedmark.systems/api/v1/stats?country=US"
-    );
-    const data = await res.json();
-    const us_stats = data.data.covid19Stats;
+    const us_stats = USData.data;
 
     //set localStorage
-    localStorage.setItem(
-      "covid_data",
-      JSON.stringify(this.aggregateData(us_stats))
-    );
-    localStorage.setItem("covid_data_updated", data.data.lastChecked);
+    // localStorage.setItem(
+    //   "covid_data",
+    //   JSON.stringify(this.aggregateData(us_stats))
+    // );
+    //localStorage.setItem("covid_data_updated", us_stats.data.lastChecked);
 
     this.setState({
-      cityData: us_stats,
-      stateData: this.aggregateData(us_stats),
-      lastUpdated: data.data.lastChecked
+      cityData: us_stats.covid19Stats.sort((a, b) => (a.confirmed < b.confirmed) ? 1 : -1),
+      stateData: this.aggregateData(us_stats.covid19Stats),
+      lastUpdated: us_stats.lastChecked
     });
   };
 
@@ -282,26 +288,29 @@ class App extends React.Component {
     if (document.querySelectorAll(".jvectormap-tip").length > 0) {
       document.querySelectorAll(".jvectormap-tip")[0].remove();
     }
-
+    console.log(states)
     return (
-      <div className="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+      <div className="d-flex w-100 h-100 p-3 mx-auto flex-column">
         <Header />
         <main role="main" className="inner cover">
           {isLoading ? (
             <LoadingSpinner />
           ) : (
-            <div style={{ width: "100%", height: 700 }}>
-              <Statistics
-                cases={us_cases}
-                deaths={us_deaths}
-                recovered={us_recovered}
-              />
-              <Map cityData={cityData} states={states}/>
-              <UnitedStatesTable states={states} us_cases={us_cases} us_deaths={us_deaths} />
-              {/* {cities.length === 0 ?
-                <UnitedStatesTable states={states} /> :
-                <Cities cities={cities} lastUpdated={lastUpdated} />
-              } */}
+            <div>
+              <SidePanel cityData={cityData} />
+              <div style={{ width: "75%", float: 'right'}}>
+                <Statistics
+                  cases={us_cases}
+                  deaths={us_deaths}
+                  recovered={us_recovered}
+                />
+                <Map cityData={cityData} states={states}/>
+                <UnitedStatesTable states={states} us_cases={us_cases} us_deaths={us_deaths} />
+                {/* {cities.length === 0 ?
+                  <UnitedStatesTable states={states} /> :
+                  <Cities cities={cities} lastUpdated={lastUpdated} />
+                } */}
+            </div>
             </div>
           )}
         </main>

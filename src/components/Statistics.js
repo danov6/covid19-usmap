@@ -20,11 +20,9 @@ const Statistics = ({ cases, deaths, recovered }) => {
       </thead>
       <tbody>
         <tr>
-          <td style={{ fontSize: "1.5em" }}>{cases}</td>
-          <td style={{ color: "red", fontSize: "1.5em" }}>{deaths}</td>
-          <td style={{ color: "#5aff5a", fontSize: "1.5em" }}>
-            {recovered}
-          </td>
+          <td style={{ fontSize: "1.5em" }}>{cases.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+          <td style={{ color: "red", fontSize: "1.5em" }}>{deaths.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+          <td style={{ color: "#5aff5a", fontSize: "1.5em" }}>{recovered.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
         </tr>
       </tbody>
     </table>
