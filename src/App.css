@@ -168,3 +168,12 @@ div.jvectormap-container > svg {
   border-top-color: var(--tooltip-color);
   transform-origin: top center;
 }
+
+#city_info_table{
+  width: 100%;
+  margin-left: 10%;
+}
+table#city_info_table td{
+  font-size: 1.2em;
+  text-align: left;
+}

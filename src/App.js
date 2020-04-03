@@ -1,27 +1,16 @@
 import React from "react";
-import { VectorMap } from "react-jvectormap";
 import "./App.css";
 import LoadingSpinner from "./LoadingSpinner";
 import UnitedStatesTable from "./UnitedStatesTable";
-import CitiesTable from "./CitiesTable";
 import STATES from "./constants/States";
 import Statistics from "./components/Statistics";
 import Header from "./components/Header";
-import ReactMapGL from 'react-map-gl';
 import Map from './components/Map';
 import SidePanel from './components/SidePanel';
+import { connect } from 'react-redux';
 
 import USData from './constants/USData';
 
-// var mapboxgl = require('mapbox-gl/dist/mapbox-gl.js');
-        
-// mapboxgl.accessToken = 'pk.eyJ1IjoiZ2x2YWxkZXoiLCJhIjoiY2s4ZGVsamIxMHRqazNsb3d1aDN6bmNvMCJ9.AzXsa9tQkXmdzyXaDUdqJw';
-// var map = new mapboxgl.Map({
-//   container: 'map',
-//   style: 'mapbox://styles/glvaldez/ck8df394y0hn51imqb0n3yu9v'
-// });
-
-var ACCESS_TOKEN = 'pk.eyJ1IjoiZ2x2YWxkZXoiLCJhIjoiY2s4ZGVsamIxMHRqazNsb3d1aDN6bmNvMCJ9.AzXsa9tQkXmdzyXaDUdqJw';
 class App extends React.Component {
   state = {
     us_cases: 0,
@@ -29,7 +18,6 @@ class App extends React.Component {
     us_recovered: 0,
     cityData: [],
     states: {},
-    hasError: false,
     lastUpdated: null,
     maxCases: {},
     maxDeaths: {},
@@ -44,10 +32,10 @@ class App extends React.Component {
       //setInterval(async () =>  await this.fetchAllData(), 60 * 60 * 1000);
       await this.fetchAllData();
     } catch (err) {
-      console.log(err);
-      this.setState({
-        hasError: true
-      });
+      // console.log(err);
+      // this.setState({
+      //   hasError: true
+      // });
     }
   }
 
@@ -113,12 +101,13 @@ class App extends React.Component {
     //   JSON.stringify(this.aggregateData(us_stats))
     // );
     //localStorage.setItem("covid_data_updated", us_stats.data.lastChecked);
-
-    this.setState({
-      cityData: us_stats.covid19Stats.sort((a, b) => (a.confirmed < b.confirmed) ? 1 : -1),
-      stateData: this.aggregateData(us_stats.covid19Stats),
-      lastUpdated: us_stats.lastChecked
-    });
+    setTimeout(()=>{
+      this.setState({
+        cityData: us_stats.covid19Stats.sort((a, b) => (a.confirmed < b.confirmed) ? 1 : -1),
+        stateData: this.aggregateData(us_stats.covid19Stats),
+        lastUpdated: us_stats.lastChecked
+      });
+    },1000);
   };
 
   aggregateData = data => {
@@ -153,28 +142,6 @@ class App extends React.Component {
     //set state max and min totals
     this.setMinAndMaxValues(map.states);
   };
-
-  // setClickListener = prov => {
-  //   if (
-  //     typeof STATES[prov] !== "undefined" &&
-  //     document.querySelector("path[data-code=" + STATES[prov] + "]") != null
-  //   ) {
-  //     document
-  //       .querySelector("path[data-code=" + STATES[prov] + "]")
-  //       .addEventListener("click", e => {
-  //         document.querySelector(
-  //           "path[data-code=" + STATES[prov] + "]"
-  //         ).style.fill = "#000";
-  //         let { stateData } = this.state;
-  //         let selectedState = stateData.filter(s => {
-  //           return s.province === prov;
-  //         })[0];
-  //         this.setState({
-  //           selectedState
-  //         });
-  //       });
-  //   }
-  // };
 
   setMinAndMaxValues = return_data => {
     //find max confirmed cases
@@ -225,34 +192,7 @@ class App extends React.Component {
         min_deaths["province"] = return_data[i].province;
       }
     }
-
-    setTimeout(() => {
-      this.setState({
-        isLoading: false
-      });
-      for (var i = 0; i < return_data.length; i++) {
-        var percent = 100 - (return_data[i].deaths / max_deaths["count"]) * 100;
-
-        //color states on map
-        colorProvince(percent, return_data[i].province);
-
-        //add listeners to states
-        this.setClickListener(return_data[i].province);
-      }
-    });
   };
-
-  // onRegionClick = (e, code) => {
-  //   let { stateData } = this.state;
-  //   console.log(code);
-  //   //document.querySelector("path[data-code="+ code +"]").style.fill = '#000';
-  //   var selectedState = stateData.filter(s => {
-  //     return code === STATES[s.province];
-  //   })[0];
-  //   this.setState({
-  //     selectedState
-  //   });
-  // };
 
   render() {
     const {
@@ -262,42 +202,21 @@ class App extends React.Component {
       us_deaths,
       us_recovered,
       cityData,
-      selectedState,
-      lastUpdated
     } = this.state;
-    const regionControls = {
-      initial: {
-        fill: "#175c98",
-        borderColor: "#fff",
-        "fill-opacity": 1,
-        stroke: "none",
-        "stroke-width": 0,
-        "stroke-opacity": 1
-      },
-      hover: {
-        "fill-opacity": 0.8,
-        cursor: "pointer"
-      },
-      selected: {
-        fill: "yellow",
-        "fill-opacity": 1
-      },
-      selectedHover: {}
-    };
-
-    if (document.querySelectorAll(".jvectormap-tip").length > 0) {
-      document.querySelectorAll(".jvectormap-tip")[0].remove();
-    }
-    console.log(states)
+    let {
+      selectedCity,
+      selectedState
+    } = this.props;
+    
     return (
       <div className="d-flex w-100 h-100 p-3 mx-auto flex-column">
         <Header />
         <main role="main" className="inner cover">
-          {isLoading ? (
-            <LoadingSpinner />
-          ) : (
-            <div>
-              <SidePanel cityData={cityData} />
+          <div>
+            <SidePanel cityData={cityData} />
+            {isLoading ? (
+                <LoadingSpinner />
+              ) : (
               <div style={{ width: "75%", float: 'right'}}>
                 <Statistics
                   cases={us_cases}
@@ -306,41 +225,18 @@ class App extends React.Component {
                 />
                 <Map cityData={cityData} states={states}/>
                 <UnitedStatesTable states={states} us_cases={us_cases} us_deaths={us_deaths} />
-                {/* {cities.length === 0 ?
-                  <UnitedStatesTable states={states} /> :
-                  <Cities cities={cities} lastUpdated={lastUpdated} />
-                } */}
-            </div>
-            </div>
-          )}
+              </div>
+            )}
+          </div>
         </main>
       </div>
     );
   }
 }
 
-const colorProvince = (perc, prov) => {
-  var r,
-    g,
-    b = 0;
-  var color = "";
-  if (perc < 50) {
-    r = 255;
-    g = Math.round(5.1 * perc);
-  } else {
-    g = 255;
-    r = Math.round(510 - 5.1 * perc);
-  }
-  var h = r * 0x10000 + g * 0x100 + b * 0x1;
-  color = "#" + ("000000" + h.toString(16)).slice(-6);
-  if (
-    typeof STATES[prov] !== "undefined" &&
-    document.querySelector("path[data-code=" + STATES[prov] + "]") != null
-  ) {
-    document.querySelector(
-      "path[data-code=" + STATES[prov] + "]"
-    ).style.fill = color;
-  }
-};
+const mapStateToProps = state => ({
+  selectedCity: state.city,
+  selectedState: state.state
+});
 
-export default App;
+export default connect(mapStateToProps,null)(App);

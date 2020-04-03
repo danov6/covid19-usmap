@@ -1,28 +1,20 @@
 import React from 'react';
 import States from "./../constants/States";
+import { connect } from 'react-redux';
+import CityListItems from './CityListItems';
+import SelectedCityInfo from './SelectedCityInfo';
 
-const SidePanel = ({cityData}) => {
-    return (
-        <aside style={{width: '25%', height: '100%', position: 'fixed', left: 0, backgroundColor: 'rgb(80, 80, 80)', top: 142}}>
-          <h5>Top 5 Cities</h5>
-          <table style={{width: '100%'}}>
-            <thead>
-              <tr>
-                <td>City</td>
-                <td>Cases</td>
-                <td>Deaths</td>
-              </tr>
-            </thead>
-            <tbody>
-              {cityData.slice(0,5).map((c,i) => (
-                <tr key={i}>
-                  <td>{c.city + ',' + States[c.province].replace('US-','')}</td>
-                  <td>{c.confirmed}</td>
-                  <td>{c.deaths}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+const SidePanel = ({cityData, selectedCity, selectedState}) => {
+    
+  let info = 'Top 5 Cities';
+  if(Object.keys(selectedCity).length > 0){
+    info = <SelectedCityInfo />
+  }else{
+    info = <CityListItems cityData={cityData}/>;
+  }
+  return (
+      <aside style={{width: '25%', height: '100%', position: 'fixed', left: 0, backgroundColor: 'rgb(80, 80, 80)', top: 142}}>
+          {info}
           <hr/>
           <h5>Controls</h5>
           <div className="custom-control custom-switch">
@@ -33,4 +25,9 @@ const SidePanel = ({cityData}) => {
     );
 }
 
-export default SidePanel;
+const mapStateToProps = state => ({
+  selectedCity: state.city,
+  selectedState: state.state
+});
+
+export default connect(mapStateToProps,null)(SidePanel);
