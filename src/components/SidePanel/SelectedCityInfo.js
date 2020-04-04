@@ -1,5 +1,5 @@
 import React from 'react';
-import States from './../constants/States';
+import States from './../../constants/States';
 import { connect } from 'react-redux';
 
 const SelectedCityInfo = ({selectedCity}) => {
@@ -19,6 +19,10 @@ const SelectedCityInfo = ({selectedCity}) => {
                     <tr>
                         <td>Total Deaths: </td>
                         <td>{selectedCity.deaths}</td>
+                    </tr>
+                    <tr>
+                        <td>Death Rate: </td>
+                        <td style={{color: 'red'}}>{((selectedCity.deaths/selectedCity.cases)*100).toFixed(1)}%</td>
                     </tr>
                 </tbody>
             </table>

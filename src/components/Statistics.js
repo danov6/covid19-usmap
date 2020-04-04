@@ -2,15 +2,7 @@ import React from "react";
 
 const Statistics = ({ cases, deaths, recovered }) => {
   return (
-    <table
-      style={{
-        width: "100%",
-        fontSize: "2em",
-        marginTop: "8%",
-        backgroundColor: "#2d2d2d",
-        borderRadius: 6
-      }}
-    >
+    <table id="summary_stats">
       <thead>
         <tr>
           <td>Cases</td>

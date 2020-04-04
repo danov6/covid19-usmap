@@ -6,7 +6,7 @@ import STATES from "./constants/States";
 import Statistics from "./components/Statistics";
 import Header from "./components/Header";
 import Map from './components/Map';
-import SidePanel from './components/SidePanel';
+import SidePanel from './components/SidePanel/SidePanel';
 import { connect } from 'react-redux';
 
 import USData from './constants/USData';
@@ -217,7 +217,7 @@ class App extends React.Component {
             {isLoading ? (
                 <LoadingSpinner />
               ) : (
-              <div style={{ width: "75%", float: 'right'}}>
+              <div id="main_contents">
                 <Statistics
                   cases={us_cases}
                   deaths={us_deaths}

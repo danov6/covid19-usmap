@@ -1,11 +1,11 @@
 import React from 'react';
-import States from './../constants/States';
+import States from './../../constants/States';
 
 const CityListItems = ({cityData, title}) => {
     return (
         <div>
             <h4>Top 5 Cities</h4>
-            <table style={{width: '100%'}}>
+            <table id="city_list">
               <thead>
                 <tr>
                   <td>City</td>

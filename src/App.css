@@ -168,7 +168,10 @@ div.jvectormap-container > svg {
   border-top-color: var(--tooltip-color);
   transform-origin: top center;
 }
-
+#main_contents{
+  width: 75%;
+  float: right;
+}
 #city_info_table{
   width: 100%;
   margin-left: 10%;
@@ -176,4 +179,56 @@ div.jvectormap-container > svg {
 table#city_info_table td{
   font-size: 1.2em;
   text-align: left;
+}
+#side_panel{
+  width: 25%;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  background-color: rgb(80, 80, 80);
+  top: 142px;
+  overflow: hidden;
+}
+#side_panel_close{
+  position: relative;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  font-size: 1.2em;
+  padding: 5px;
+  text-align: right;
+  text-shadow: none;
+}
+#summary_stats{
+  width: 100%;
+  font-size: 2em;
+  margin-top: 8%;
+  background-color: #2d2d2d;
+  border-radius: 6px;
+}
+#city_list{
+  width: 100%;
+}
+#state_list{
+  width: 100%;
+  font-size: 1.2em;
+  color: #fff;
+}
+@media only screen and (max-width: 600px) {
+  main.cover{
+    padding: 0;
+  }
+  #summary_stats{
+    font-size: 1.2em
+  }
+  #side_panel,#city_list{
+    width: 0%;
+  }
+  #main_contents{
+    width: 100%;
+    float: none;
+  }
+  #state_list{
+    font-size: 0.6em;
+  }
 }

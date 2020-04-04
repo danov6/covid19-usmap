@@ -18,10 +18,7 @@ const UnitedStatesTable = ({ states, lastChecked = new Date() }) => {
 
   return (
     <div className="table-responsive">
-      <table
-        style={{ width: "100%", fontSize: "1.2em", color: "#fff" }}
-        className="table table-striped table-sm"
-      >
+      <table id="state_list" className="table table-striped table-sm">
         <thead>
           <tr>
             <th>State</th>
