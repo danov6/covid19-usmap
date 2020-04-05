@@ -7,6 +7,7 @@ const STATES = {
     "Colorado": "US-CO",
     "Connecticut": "US-CT",
     "Delaware": "US-DE",
+    "District of Columbia": "US-DC",
     "Florida": "US-FL",
     "Georgia": "US-GA",
     "Hawaii": "US-HI",

@@ -212,7 +212,8 @@ aside#side_panel{
 #city_list{
   width: 100%;
 }
-table#state_list > tbody > tr:hover{
+table#state_list > tbody > tr:hover,
+table#state_list > thead > tr > th.select:hover{
   background-color: #fff;
   color: #000;
   cursor: pointer;
