@@ -1,17 +1,21 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import CityListItems from './CityListItems';
+import ListItems from './ListItems';
 import SelectedCityInfo from './SelectedCityInfo';
+import SelectedStateInfo from './SelectedStateInfo';
 
-const SidePanel = ({cityData, selectedCity, selectedState}) => {
+const SidePanel = ({cityData, selectedCity, selectedState, states}) => {
     
-  let info = 'Top 5 Cities';
-  let close_button_style = 'none';
-  if(Object.keys(selectedCity).length > 0){
+  let hasState = Object.keys(selectedState).length > 0;
+  let hasCity = Object.keys(selectedCity).length > 0;
+
+  let info = <ListItems data={cityData} limit={5}/>;
+
+  if(hasCity){
     info = <SelectedCityInfo />
-    close_button_style = 'block';
-  }else{
-    info = <CityListItems cityData={cityData}/>;
+    //close_button_style = 'block';
+  }else if(hasState){
+    info = <SelectedStateInfo states={states}/>;
   }
   return (
       <aside id="side_panel" >
@@ -20,8 +24,8 @@ const SidePanel = ({cityData, selectedCity, selectedState}) => {
         <hr/>
         <h5>Controls</h5>
         <div className="custom-control custom-switch">
-        <input type="checkbox" className="custom-control-input" id="customSwitch1" />
-        <label className="custom-control-label" htmlFor="customSwitch1">Heatmap</label>
+          <input type="checkbox" className="custom-control-input" id="customSwitch1" />
+          <label className="custom-control-label" htmlFor="customSwitch1">Heatmap</label>
         </div>
       </aside>
     );

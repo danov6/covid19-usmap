@@ -1,37 +1,39 @@
 import React from 'react';
-import States from './../../constants/States';
 import { connect } from 'react-redux';
+import ListItems from './ListItems';
 
-const SelectedCityInfo = ({selectedCity}) => {
+const SelectedStateInfo = ({selectedState, states}) => {
     return (
         <div>
-            <h3>{selectedCity.data.city + ", " + States[selectedCity.data.state].replace('US-','')}</h3>
+            <h3>{selectedState.province}</h3>
             <table id="sidebar_info_table">
                 <tbody>
                     <tr>
                         <td>Population: </td>
-                        <td>{selectedCity.data.population}</td>
+                        <td>N/A</td>
                     </tr>
                     <tr>
                         <td>Total Cases: </td>
-                        <td>{selectedCity.cases}</td>
+                        <td>{selectedState.cases}</td>
                     </tr>
                     <tr>
                         <td>Total Deaths: </td>
-                        <td>{selectedCity.deaths}</td>
+                        <td>{selectedState.deaths}</td>
                     </tr>
                     <tr>
                         <td>Death Rate: </td>
-                        <td style={{color: 'red'}}>{((selectedCity.deaths/selectedCity.cases)*100).toFixed(1)}%</td>
+                        <td style={{color: 'red'}}>{((selectedState.deaths/selectedState.cases)*100).toFixed(1)}%</td>
                     </tr>
                 </tbody>
             </table>
+            <hr/>
+            <ListItems data={states[selectedState.province]} />
         </div>
     );
 }
 
 const mapStateToProps = state => ({
-    selectedCity: state.city,
+    selectedState: state.state,
 });
 
-export default connect(mapStateToProps,null)(SelectedCityInfo);
+export default connect(mapStateToProps,null)(SelectedStateInfo);

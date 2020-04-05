@@ -41,7 +41,6 @@ body {
   display: -ms-flexbox;
   display: flex;
   color: #fff;
-  text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
 }
 
 /*
@@ -83,6 +82,7 @@ body {
   }
   .nav-masthead {
     float: right;
+    margin-right: 2%;
   }
 }
 
@@ -172,22 +172,23 @@ div.jvectormap-container > svg {
   width: 75%;
   float: right;
 }
-#city_info_table{
+#sidebar_info_table{
   width: 100%;
   margin-left: 10%;
 }
-table#city_info_table td{
+table#sidebar_info_table td{
   font-size: 1.2em;
   text-align: left;
 }
-#side_panel{
+aside#side_panel{
   width: 25%;
-  height: 100%;
-  position: fixed;
-  left: 0;
-  background-color: rgb(80, 80, 80);
-  top: 142px;
-  overflow: hidden;
+    height: 85%;
+    position: fixed;
+    left: 0;
+    background-color: rgb(80, 80, 80);
+    top: 14%;
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
 #side_panel_close{
   position: relative;
@@ -202,26 +203,42 @@ table#city_info_table td{
 #summary_stats{
   width: 100%;
   font-size: 2em;
-  margin-top: 8%;
+  margin-top: 4%;
   background-color: #2d2d2d;
   border-radius: 6px;
 }
 #city_list{
   width: 100%;
 }
+table#state_list > tbody > tr:hover{
+  background-color: #fff;
+  color: #000;
+  cursor: pointer;
+}
 #state_list{
   width: 100%;
   font-size: 1.2em;
   color: #fff;
 }
+.city{
+  padding-left: 10%;
+  text-align: left;
+}
 @media only screen and (max-width: 600px) {
+  nav{
+    width: 50%;
+    text-align: right;
+  }
+  div.inner {
+    display: flex;
+  }
   main.cover{
     padding: 0;
   }
   #summary_stats{
     font-size: 1.2em
   }
-  #side_panel,#city_list{
+  aside#side_panel,#city_list{
     width: 0%;
   }
   #main_contents{
@@ -230,5 +247,8 @@ table#city_info_table td{
   }
   #state_list{
     font-size: 0.6em;
+  }
+  aside#side_panel:active{
+    width: 100%
   }
 }

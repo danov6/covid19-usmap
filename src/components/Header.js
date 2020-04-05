@@ -4,7 +4,7 @@ const Header = () => {
   return (
     <header className="masthead mb-auto">
       <div className="inner">
-        <h3 className="masthead-brand">U.S Coronavirus Cases</h3>
+        <h3 className="masthead-brand">Covid-19 U.S</h3>
         <nav className="nav nav-masthead justify-content-center">
           <a className="nav-link active" href="#">
             Home

@@ -3,7 +3,7 @@
   "statusCode": 200,
   "message": "OK",
   "data": {
-    "lastChecked": "2020-04-04T00:06:19.332Z",
+    "lastChecked": "2020-04-04T21:06:19.471Z",
     "covid19Stats": [
       {
         "city": "Abbeville",
@@ -23654,16 +23654,6 @@
         "confirmed": 316,
         "deaths": 15,
         "recovered": 0
-      },
-      {
-        "city": "",
-        "province": "Recovered",
-        "country": "US",
-        "lastUpdate": "2020-04-03 22:46:37",
-        "keyId": "Recovered, US",
-        "confirmed": 0,
-        "deaths": 0,
-        "recovered": 9707
       },
       {
         "city": "",

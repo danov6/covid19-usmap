@@ -13,9 +13,6 @@ import USData from './constants/USData';
 
 class App extends React.Component {
   state = {
-    us_cases: 0,
-    us_deaths: 0,
-    us_recovered: 0,
     cityData: [],
     states: {},
     lastUpdated: null,
@@ -52,55 +49,8 @@ class App extends React.Component {
   };
 
   fetchAllData = async () => {
-    // if (document.cookie === "") {
-    //   localStorage.clear();
-    // }
-    // //multiple calls of api might not be bad
-    // if (localStorage.getItem('covid_data') != null && localStorage.getItem('covid_data_updated') != null && localStorage.getItem('covid_data_recovered') != null) {
-    //   //check localStorage
-    //   let us_data = JSON.parse(localStorage.getItem('covid_data'));
-
-    //   //set US totals
-    //   this.setUSTotals(us_data);
-
-    //   //set state max and min totals
-    //   this.setMinAndMaxValues(us_data);
-
-    //   this.setState({
-    //     us_recovered: localStorage.getItem('covid_data_recovered'),
-    //     stateData: us_data,
-    //     lastUpdated: localStorage.getItem('covid_data_updated'),
-    //   });
-    // } else {
-    //   const res = await fetch('http://covid19-api.weedmark.systems/api/v1/stats?country=US')
-    //   const data = await res.json();
-    //   const us_stats = data.data.covid19Stats;
-
-    //   //set localStorage
-    //   localStorage.setItem('covid_data', JSON.stringify(this.groupData(us_stats)));
-    //   localStorage.setItem('covid_data_updated', data.data.lastChecked);
-
-    //   this.setState({
-    //     stateData: this.groupData(us_stats),
-    //     lastUpdated: data.data.lastChecked
-    //   });
-    // }
-    //https://covidtracking.com/api/states
-    //https://covid19-server.chrismichael.now.sh/api/v1/CasesInAllUSStates
-    // const res = await fetch(
-    //   "http://covid19-api.weedmark.systems/api/v1/stats?country=US"
-    // );
-    // const data = await res.json();
-    // const us_stats = data.data.covid19Stats;
-
     const us_stats = USData.data;
 
-    //set localStorage
-    // localStorage.setItem(
-    //   "covid_data",
-    //   JSON.stringify(this.aggregateData(us_stats))
-    // );
-    //localStorage.setItem("covid_data_updated", us_stats.data.lastChecked);
     setTimeout(()=>{
       this.setState({
         cityData: us_stats.covid19Stats.sort((a, b) => (a.confirmed < b.confirmed) ? 1 : -1),
@@ -119,22 +69,12 @@ class App extends React.Component {
         else {
           acc.states[currentValue.province].push(currentValue)
         }
-
-        if (currentValue.province.toLowerCase() === "recovered") {
-          acc.recovered = currentValue.recovered;
-        }
-
-        acc.deaths += currentValue.deaths;
-        acc.cases += currentValue.confirmed;
         return acc;
       },
-      { deaths: 0, cases: 0, recovered: 0 , states: {}}
+      { states: {}}
     );
 
     this.setState({
-      us_cases: map.cases,
-      us_deaths: map.deaths,
-      us_recovered: map.recovered,
       states: map.states,
       isLoading: false
     });
@@ -198,33 +138,22 @@ class App extends React.Component {
     const {
       states,
       isLoading,
-      us_cases,
-      us_deaths,
-      us_recovered,
       cityData,
     } = this.state;
-    let {
-      selectedCity,
-      selectedState
-    } = this.props;
     
     return (
       <div className="d-flex w-100 h-100 p-3 mx-auto flex-column">
         <Header />
         <main role="main" className="inner cover">
           <div>
-            <SidePanel cityData={cityData} />
+            <SidePanel cityData={cityData} states={states}/>
             {isLoading ? (
                 <LoadingSpinner />
               ) : (
               <div id="main_contents">
-                <Statistics
-                  cases={us_cases}
-                  deaths={us_deaths}
-                  recovered={us_recovered}
-                />
+                <Statistics />
                 <Map cityData={cityData} states={states}/>
-                <UnitedStatesTable states={states} us_cases={us_cases} us_deaths={us_deaths} />
+                <UnitedStatesTable states={states} />
               </div>
             )}
           </div>

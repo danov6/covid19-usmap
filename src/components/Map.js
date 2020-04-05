@@ -5,7 +5,12 @@ import States from './../constants/States';
 import * as d3 from 'd3';
 import { connect } from 'react-redux';
 
-const Map = ({cityData, states, setCity}) => {
+/*
+This component is the map and handles all of the 
+features and its events
+*/
+
+const Map = ({cityData, states, setSelectedCity}) => {
   const [ viewport, setViewport ] = useState({
     latitude: 38.219860,
     longitude: -96.500965,
@@ -53,7 +58,7 @@ const Map = ({cityData, states, setCity}) => {
         {markers.map((c,i) => {
           return (
             <Marker latitude={c.data.latitude} longitude={c.data.longitude} key={i}>
-               <div style={{color: 'red', fontSize: 20, cursor: 'pointer', top: -20, position: 'absolute'}} onClick={() => {setCity(c)}} className="map_marker" data-tooltip={c.data.city + "," + States[c.data.state].replace('US-','')}>.</div>
+               <div style={{color: 'red', fontSize: 20, cursor: 'pointer', top: -20, position: 'absolute'}} onClick={() => {setSelectedCity(c)}} className="map_marker" data-tooltip={c.data.city + "," + States[c.data.state].replace('US-','')}>.</div>
             </Marker>
           )
         })}
@@ -63,7 +68,7 @@ const Map = ({cityData, states, setCity}) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  setCity: data => dispatch({ type: 'SET_CITY', data })
+  setSelectedCity: data => dispatch({ type: 'SET_CITY', data })
 });
 
 export default connect(null, mapDispatchToProps)(Map);
