@@ -10,7 +10,7 @@ const Statistics = () => {
   useEffect(() => {
     async function fetchData() {
       try{
-        let res = await fetch('http://covidtracking.com/api/us');
+        let res = await fetch('https://covidtracking.com/api/us');
         let data = await res.json();
         setLoading(false);
         setCases(data[0].positive.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));

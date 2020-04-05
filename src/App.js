@@ -1,8 +1,7 @@
 import React from "react";
 import "./App.css";
 import LoadingSpinner from "./LoadingSpinner";
-import UnitedStatesTable from "./UnitedStatesTable";
-import STATES from "./constants/States";
+import StatesTable from "./components/StatesTable";
 import Statistics from "./components/Statistics";
 import Header from "./components/Header";
 import Map from './components/Map';
@@ -11,15 +10,12 @@ import { connect } from 'react-redux';
 
 import USData from './constants/USData';
 
+//API for new data http://covid19-api.weedmark.systems/api/v1/stats?country=US
 class App extends React.Component {
   state = {
     cityData: [],
     states: {},
     lastUpdated: null,
-    maxCases: {},
-    maxDeaths: {},
-    minCases: {},
-    minDeaths: {},
     selectedState: {},
     isLoading: true
   };
@@ -78,60 +74,6 @@ class App extends React.Component {
       states: map.states,
       isLoading: false
     });
-
-    //set state max and min totals
-    this.setMinAndMaxValues(map.states);
-  };
-
-  setMinAndMaxValues = return_data => {
-    //find max confirmed cases
-    var max_confirmed = {
-      province: "",
-      count: 0
-    };
-    for (var i = 0; i < return_data.length; i++) {
-      if (return_data[i].confirmed > max_confirmed["count"]) {
-        max_confirmed["count"] = return_data[i].confirmed;
-        max_confirmed["province"] = return_data[i].province;
-      }
-    }
-    //find min confirmed cases
-    var min_confirmed = {
-      province: max_confirmed["province"],
-      count: max_confirmed["count"]
-    };
-
-    for (var i = 0; i < return_data.length; i++) {
-      if (return_data[i].confirmed < min_confirmed["count"]) {
-        min_confirmed["count"] = return_data[i].confirmed;
-        min_confirmed["province"] = return_data[i].province;
-      }
-    }
-
-    //find max deaths
-    var max_deaths = {
-      province: "",
-      count: 0
-    };
-
-    for (var i = 0; i < return_data.length; i++) {
-      if (return_data[i].deaths > max_deaths["count"]) {
-        max_deaths["count"] = return_data[i].deaths;
-        max_deaths["province"] = return_data[i].province;
-      }
-    }
-
-    //find min deaths
-    var min_deaths = {
-      province: max_deaths["province"],
-      count: max_deaths["count"]
-    };
-    for (var i = 0; i < return_data.length; i++) {
-      if (return_data[i].deaths < min_deaths["count"]) {
-        min_deaths["count"] = return_data[i].deaths;
-        min_deaths["province"] = return_data[i].province;
-      }
-    }
   };
 
   render() {
@@ -153,7 +95,7 @@ class App extends React.Component {
               <div id="main_contents">
                 <Statistics />
                 <Map cityData={cityData} states={states}/>
-                <UnitedStatesTable states={states} />
+                <StatesTable states={states} />
               </div>
             )}
           </div>

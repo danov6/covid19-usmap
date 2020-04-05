@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import ListItems from './ListItems';
 import SelectedCityInfo from './SelectedCityInfo';
 import SelectedStateInfo from './SelectedStateInfo';
+import Controls from './Controls';
 
 const SidePanel = ({cityData, selectedCity, selectedState, states}) => {
     
@@ -19,20 +20,19 @@ const SidePanel = ({cityData, selectedCity, selectedState, states}) => {
   }
   return (
       <aside id="side_panel" >
-        {/* <div id="side_panel_close" style={{display: close_button_style}} onClick={{}}>X</div> */}
+        <div id="side_panel_close" onClick={() => {handleClose()}}>X</div>
         {info}
         <hr/>
-        <h5>Controls</h5>
-        <div className="custom-control custom-switch">
-          <input type="checkbox" className="custom-control-input" id="customSwitch1" />
-          <label className="custom-control-label" htmlFor="customSwitch1">Heatmap</label>
-        </div>
+        {/* <Controls /> */}
       </aside>
     );
 }
-const handleClose = () => {
 
-}
+const handleClose = () => {
+  if(document.querySelector('aside#side_panel') != null){
+    document.querySelector('aside#side_panel').className = "closed";
+  }
+};
 
 const mapStateToProps = state => ({
   selectedCity: state.city,

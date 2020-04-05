@@ -8,8 +8,8 @@ This component is the table below the map that:
  - Allows you to select a state for more detailed info
 */
 
-const UnitedStatesTable = ({ states, lastChecked = new Date(), removeSelectedCity, setSelectedState}) => {
-  const stateData = Object.keys(states).map(key => {
+const StatesTable = ({ states, lastChecked = new Date(), removeSelectedCity, setSelectedState}) => {
+  let stateData = Object.keys(states).map(key => {
     let cases = 0;
     let deaths = 0;
 
@@ -21,7 +21,25 @@ const UnitedStatesTable = ({ states, lastChecked = new Date(), removeSelectedCit
     return { province: key, cases, deaths, lastUpdate: lastChecked };
   }).sort((a, b) => (a.cases < b.cases) ? 1 : -1);
 
+  stateData = stateData.filter((s) => {
+    return (s.province !== "Recovered" &&
+    s.province !== "Grand Princess" &&
+    s.province !== "Guam" && 
+    s.province !== "Diamond Princess" &&
+    s.province !== "Northern Mariana Islands" &&
+    s.province !== "Virgin Islands"
+     );
+  });
+
   const handleSelectedState = s => {
+    console.log(window.screen.width);
+    if(window.screen.width <= 600){
+      if(document.querySelector('aside#side_panel') != null && document.querySelector('#city_list') != null){
+        document.querySelector('aside#side_panel').className = "active";
+        document.querySelector('#city_list').className = "active";
+      }
+    }
+
     removeSelectedCity();
     setSelectedState(s);
   };
@@ -61,4 +79,4 @@ const mapDispatchToProps = dispatch => ({
     removeSelectedCity: () => dispatch({ type: 'REMOVE_CITY'})
 });
 
-export default connect(null, mapDispatchToProps)(UnitedStatesTable);
+export default connect(null, mapDispatchToProps)(StatesTable);

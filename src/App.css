@@ -82,7 +82,7 @@ body {
   }
   .nav-masthead {
     float: right;
-    margin-right: 2%;
+    margin-right: 4%;
   }
 }
 
@@ -195,10 +195,12 @@ aside#side_panel{
   top: 0;
   right: 0;
   cursor: pointer;
-  font-size: 1.2em;
+  font-size: 1.5em;
   padding: 5px;
   text-align: right;
   text-shadow: none;
+  display: none;
+  padding-right: 8%;
 }
 #summary_stats{
   width: 100%;
@@ -224,6 +226,13 @@ table#state_list > tbody > tr:hover{
   padding-left: 10%;
   text-align: left;
 }
+.summary{
+  background-color: #2d2d2d;
+  border-radius: 6px;
+  padding: 3% 0%;
+  margin: 2%;
+  overflow-x: hidden;
+}
 @media only screen and (max-width: 600px) {
   nav{
     width: 50%;
@@ -238,8 +247,15 @@ table#state_list > tbody > tr:hover{
   #summary_stats{
     font-size: 1.2em
   }
-  aside#side_panel,#city_list{
+  aside#side_panel{
     width: 0%;
+    z-index: 3;
+    padding-top: 9%;
+    top: 0;
+    height: 100%;
+  }
+  #side_panel_close{
+    display: block;
   }
   #main_contents{
     width: 100%;
@@ -248,7 +264,12 @@ table#state_list > tbody > tr:hover{
   #state_list{
     font-size: 0.6em;
   }
-  aside#side_panel:active{
-    width: 100%
+  .active{
+    width: 100% !important;
+    transition: 0.5s;
+  }
+  .closed{
+    width: 0% !important;
+    transition: 0.5s;
   }
 }

@@ -37,6 +37,7 @@ const STATES = {
     "Oklahoma": "US-OK",
     "Oregon": "US-OR",
     "Pennsylvania": "US-PA",
+    "Puerto Rico": "US-PR",
     "Rhode Island": "US-RI",
     "South Carolina": "US-SC",
     "South Dakota": "US-SD",

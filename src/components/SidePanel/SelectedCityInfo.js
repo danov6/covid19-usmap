@@ -4,21 +4,21 @@ import { connect } from 'react-redux';
 
 const SelectedCityInfo = ({selectedCity}) => {
     return (
-        <div>
+        <div className="summary">
             <h3>{selectedCity.data.city + ", " + States[selectedCity.data.state].replace('US-','')}</h3>
             <table id="sidebar_info_table">
                 <tbody>
                     <tr>
                         <td>Population: </td>
-                        <td>{selectedCity.data.population}</td>
+                        <td>{selectedCity.data.population.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
                     </tr>
                     <tr>
                         <td>Total Cases: </td>
-                        <td>{selectedCity.cases}</td>
+                        <td>{selectedCity.cases.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
                     </tr>
                     <tr>
                         <td>Total Deaths: </td>
-                        <td>{selectedCity.deaths}</td>
+                        <td>{selectedCity.deaths.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
                     </tr>
                     <tr>
                         <td>Death Rate: </td>

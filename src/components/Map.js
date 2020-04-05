@@ -10,7 +10,7 @@ This component is the map and handles all of the
 features and its events
 */
 
-const Map = ({cityData, states, setSelectedCity}) => {
+const Map = ({states, setSelectedCity, removeSelectedState}) => {
   const [ viewport, setViewport ] = useState({
     latitude: 38.219860,
     longitude: -96.500965,
@@ -38,6 +38,16 @@ const Map = ({cityData, states, setSelectedCity}) => {
       }
     }
   }
+  const handleSelectedCity = c => {
+    if(window.screen.width <= 600){
+      if(document.querySelector('aside#side_panel') != null){
+        document.querySelector('aside#side_panel').className = "active";
+      }
+    }
+
+    removeSelectedState();
+    setSelectedCity(c);
+  };
   // var markerColor = d3.scaleQuantize()
   //   .domain([1, 1000])
   //   .range(["yellow", "red"]);
@@ -58,7 +68,7 @@ const Map = ({cityData, states, setSelectedCity}) => {
         {markers.map((c,i) => {
           return (
             <Marker latitude={c.data.latitude} longitude={c.data.longitude} key={i}>
-               <div style={{color: 'red', fontSize: 20, cursor: 'pointer', top: -20, position: 'absolute'}} onClick={() => {setSelectedCity(c)}} className="map_marker" data-tooltip={c.data.city + "," + States[c.data.state].replace('US-','')}>.</div>
+               <div style={{color: 'red', fontSize: 20, cursor: 'pointer', top: -20, position: 'absolute'}} onClick={() => {handleSelectedCity(c)}} className="map_marker" data-tooltip={c.data.city + "," + States[c.data.state].replace('US-','')}>.</div>
             </Marker>
           )
         })}
@@ -68,7 +78,8 @@ const Map = ({cityData, states, setSelectedCity}) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  setSelectedCity: data => dispatch({ type: 'SET_CITY', data })
+  setSelectedCity: data => dispatch({ type: 'SET_CITY', data }),
+  removeSelectedState: () => dispatch({ type: 'REMOVE_STATE'})
 });
 
 export default connect(null, mapDispatchToProps)(Map);
