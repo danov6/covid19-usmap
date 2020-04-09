@@ -52,7 +52,7 @@ const Map = ({states, setSelectedCity, removeSelectedState}) => {
   //   .domain([1, 1000])
   //   .range(["yellow", "red"]);
     return (
-      <div style={{margin: 10}}>
+      <div id="map">
         <ReactMapGL
         {...viewport}
         mapboxApiAccessToken='pk.eyJ1IjoiZ2x2YWxkZXoiLCJhIjoiY2s4ZGVsamIxMHRqazNsb3d1aDN6bmNvMCJ9.AzXsa9tQkXmdzyXaDUdqJw'

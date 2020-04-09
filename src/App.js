@@ -3,7 +3,7 @@ import "./App.css";
 import LoadingSpinner from "./LoadingSpinner";
 import StatesTable from "./components/StatesTable";
 import Statistics from "./components/Statistics";
-import Header from "./components/Header";
+import Header from "./components/Header/Header";
 import Map from './components/Map';
 import SidePanel from './components/SidePanel/SidePanel';
 import { connect } from 'react-redux';
@@ -82,7 +82,7 @@ class App extends React.Component {
       isLoading,
       cityData,
     } = this.state;
-    
+     
     return (
       <div className="d-flex w-100 h-100 p-3 mx-auto flex-column">
         <Header />

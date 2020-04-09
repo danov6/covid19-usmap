@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 const SelectedCityInfo = ({selectedCity}) => {
     return (
         <div className="summary">
-            <h3>{selectedCity.data.city + ", " + States[selectedCity.data.state].replace('US-','')}</h3>
+            <h3>{selectedCity.data.city + ", " + States[selectedCity.data.state]}</h3>
             <table id="sidebar_info_table">
                 <tbody>
                     <tr>

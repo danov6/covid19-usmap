@@ -27,7 +27,7 @@ const ListItems = ({data, title, limit}) => {
               <tbody>
                 {data.slice(0,(typeof limit === "undefined" ? data.length : limit)).map((c,i) => (
                   <tr key={i}>
-                    <td className="city">{(c.city !== "" && c.city.indexOf('Unassigned') == -1) ? c.city + ', ' + States[c.province].replace('US-','') : <i>N/A</i>}</td>
+                    <td className="city">{(c.city !== "" && c.city.indexOf('Unassigned') == -1) ? c.city + ', ' + States[c.province] : <i>N/A</i>}</td>
                     <td>{c.confirmed.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
                     <td>{c.deaths.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
                   </tr>

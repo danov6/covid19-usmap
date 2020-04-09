@@ -1,4 +1,5 @@
 import React from "react";
+import ContactModal from './ContactModal';
 
 const Header = () => {
   return (
@@ -6,11 +7,12 @@ const Header = () => {
       <div className="inner">
         <h3 className="masthead-brand">Covid-19 U.S</h3>
         <nav className="nav nav-masthead justify-content-center">
-          <a className="nav-link" href="#">
+          <a className="nav-link" data-toggle="modal" data-target="#contact_modal" style={{cursor: 'pointer'}}>
             Contact
           </a>
         </nav>
       </div>
+      <ContactModal />
     </header>
   );
 };
