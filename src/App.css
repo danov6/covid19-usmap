@@ -252,6 +252,13 @@ table#state_list > thead > tr > th.select:hover{
   font-size: 1.2em;
   color: #fff;
 }
+#contact_form input, #contact_form textarea{
+  width: 100%;
+  border-radius: 5px;
+  border: 1px solid#2d2d2d;
+  padding: 1%;
+  margin: 2%;
+}
 .city{
   padding-left: 10%;
   text-align: left;
