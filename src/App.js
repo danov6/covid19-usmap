@@ -7,6 +7,7 @@ import Header from "./components/Header/Header";
 import Map from './components/Map';
 import SidePanel from './components/SidePanel/SidePanel';
 import { connect } from 'react-redux';
+import { getCities } from './store/actions/cities'
 
 import USData from './constants/USData';
 
@@ -22,6 +23,7 @@ class App extends React.Component {
 
   async componentDidMount() {
     try {
+      await this.props.getCities();
       //setInterval(async () =>  await this.fetchAllData(), 60 * 60 * 1000);
       await this.fetchAllData();
     } catch (err) {
@@ -82,13 +84,13 @@ class App extends React.Component {
       isLoading,
       cityData,
     } = this.state;
-     
+    console.log('props', this.props)
     return (
       <div className="d-flex w-100 h-100 p-3 mx-auto flex-column">
         <Header />
         <main role="main" className="inner cover">
           <div>
-            <SidePanel cityData={cityData} states={states}/>
+            {/* <SidePanel cityData={cityData} states={states}/> */}
             {isLoading ? (
                 <LoadingSpinner />
               ) : (
@@ -106,8 +108,9 @@ class App extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  selectedCity: state.city,
+  cities: state.cities.cities,
+  selectedCity: state.cities.selectedCity,
   selectedState: state.state
 });
 
-export default connect(mapStateToProps,null)(App);
+export default connect(mapStateToProps, { getCities })(App);

@@ -12,7 +12,7 @@ const SidePanel = ({cityData, selectedCity, selectedState, states}) => {
 
   let info = <ListItems data={cityData} limit={5}/>;
 
-  if(hasCity){
+  if (hasCity){
     info = <SelectedCityInfo />
     //close_button_style = 'block';
   }else if(hasState){
