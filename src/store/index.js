@@ -1,12 +1,12 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
-import state from './reducers/state';
+import states from './reducers/states';
 import cities from './reducers/cities';
 import loading from './reducers/loading';
 
 const reducers = combineReducers({
-  state,
+  states,
   cities,
   loading,
 });

@@ -35,8 +35,8 @@ const handleClose = () => {
 };
 
 const mapStateToProps = state => ({
-  selectedCity: state.city,
-  selectedState: state.state
+  selectedCity: state.cities.selectedCity,
+  selectedState: state.states.selectedState
 });
 
 export default connect(mapStateToProps,null)(SidePanel);

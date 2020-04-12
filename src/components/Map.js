@@ -4,13 +4,15 @@ import Cities from './../constants/Cities.json';
 import States from './../constants/States';
 import * as d3 from 'd3';
 import { connect } from 'react-redux';
+import {setSelectedCity} from './../store/actions/cities'
+import {removeSelectedState} from './../store/actions/states'
 
 /*
 This component is the map and handles all of the 
 features and its events
 */
 
-const Map = ({states, setSelectedCity, removeSelectedState}) => {
+const Map = ({states,setSelectedCity,removeSelectedState}) => {
   const [ viewport, setViewport ] = useState({
     latitude: 38.219860,
     longitude: -96.500965,
@@ -21,7 +23,6 @@ const Map = ({states, setSelectedCity, removeSelectedState}) => {
     minZoom: 3,
     altitude: 4
   });
-
   let markers = [];
   for(var i = 0; i < Cities.length; i++){
     var state = Cities[i].state;
@@ -44,7 +45,7 @@ const Map = ({states, setSelectedCity, removeSelectedState}) => {
         document.querySelector('aside#side_panel').className = "active";
       }
     }
-
+    console.log()
     removeSelectedState();
     setSelectedCity(c);
   };
@@ -77,9 +78,4 @@ const Map = ({states, setSelectedCity, removeSelectedState}) => {
     );
 }
 
-const mapDispatchToProps = dispatch => ({
-  setSelectedCity: data => dispatch({ type: 'SET_CITY', data }),
-  removeSelectedState: () => dispatch({ type: 'REMOVE_STATE'})
-});
-
-export default connect(null, mapDispatchToProps)(Map);
+export default connect(null, {setSelectedCity,removeSelectedState})(Map);

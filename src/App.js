@@ -23,9 +23,11 @@ class App extends React.Component {
 
   async componentDidMount() {
     try {
+      //Get city data
       await this.props.getCities();
-      //setInterval(async () =>  await this.fetchAllData(), 60 * 60 * 1000);
-      await this.fetchAllData();
+
+      //Set city data
+      this.fetchAllData();
     } catch (err) {
       // console.log(err);
       // this.setState({
@@ -38,22 +40,14 @@ class App extends React.Component {
     clearInterval();
   }
 
-  refreshData = () => {
-    this.setState({
-      isLoading: true
-    });
-    localStorage.clear();
-    this.fetchAllData();
-  };
-
   fetchAllData = async () => {
-    const us_stats = USData.data;
+    const us_stats = this.props.cities;
 
     setTimeout(()=>{
       this.setState({
-        cityData: us_stats.covid19Stats.sort((a, b) => (a.confirmed < b.confirmed) ? 1 : -1),
-        stateData: this.aggregateData(us_stats.covid19Stats),
-        lastUpdated: us_stats.lastChecked
+        cityData: us_stats.sort((a, b) => (a.confirmed < b.confirmed) ? 1 : -1),
+        stateData: this.aggregateData(us_stats),
+        lastUpdated: new Date()
       });
     },1000);
   };
@@ -84,13 +78,13 @@ class App extends React.Component {
       isLoading,
       cityData,
     } = this.state;
-    console.log('props', this.props)
+    //console.log('props', this.props);
     return (
       <div className="d-flex w-100 h-100 p-3 mx-auto flex-column">
         <Header />
         <main role="main" className="inner cover">
           <div>
-            {/* <SidePanel cityData={cityData} states={states}/> */}
+            <SidePanel cityData={cityData} states={states}/>
             {isLoading ? (
                 <LoadingSpinner />
               ) : (
@@ -110,7 +104,7 @@ class App extends React.Component {
 const mapStateToProps = state => ({
   cities: state.cities.cities,
   selectedCity: state.cities.selectedCity,
-  selectedState: state.state
+  selectedState: state.states.selectedState
 });
 
 export default connect(mapStateToProps, { getCities })(App);

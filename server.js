@@ -17,5 +17,5 @@ app.get('/api/cities', async (req, res) => {
     return res.status(500).json(err);
   }
 });
-
+ 
 app.listen(PORT, () => console.log(`running on port ${PORT}`));

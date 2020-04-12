@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
+import { setSelectedState } from './../store/actions/states'
+import { removeSelectedCity } from './../store/actions/cities'
 
 /*
 This component is the table below the map that:
@@ -83,9 +85,4 @@ const StatesTable = ({ states, lastChecked = new Date(), removeSelectedCity, set
   );
 };
 
-const mapDispatchToProps = dispatch => ({
-    setSelectedState: data => dispatch({ type: 'SET_STATE', data }),
-    removeSelectedCity: () => dispatch({ type: 'REMOVE_CITY'})
-});
-
-export default connect(null, mapDispatchToProps)(StatesTable);
+export default connect(null, {setSelectedState,removeSelectedCity})(StatesTable);

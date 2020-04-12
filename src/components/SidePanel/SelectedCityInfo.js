@@ -31,7 +31,7 @@ const SelectedCityInfo = ({selectedCity}) => {
 }
 
 const mapStateToProps = state => ({
-    selectedCity: state.city,
+    selectedCity: state.cities.selectedCity,
 });
 
 export default connect(mapStateToProps,null)(SelectedCityInfo);
